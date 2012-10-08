@@ -1,0 +1,29 @@
+<form id="dataset-edit" method="post" 
+  py:attrs="{'class':'has-errors'} if errors else {}"
+  xmlns:i18n="http://genshi.edgewall.org/i18n"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<div class="error-explanation" py:if="error_summary">
+<h2>Errors in form</h2>
+<p>The form contains invalid entries:</p>
+<ul>
+ <li py:for="key, error in error_summary.items()">
+  ${"%s: %s" % (key, error)}
+ </li>
+</ul>
+</div>
+
+<input type="hidden" name="report_id" value="${report[0][0].report_id}" />
+
+<div class="form-submit">
+  <input id="save" class="pretty-button primary" name="save" type="submit" value="${_('Save Changes')}" />
+  <py:if test="c.pkg">
+    <input id="cancel" class="pretty-button href-action" name="cancel" type="reset" value="${_('Cancel')}" action="${h.url_for(controller='ckanext.lightbase.controllers.reports:lightbaseReportsController', action='report_read', id=c.pkg_dict.get('id'), report_id=report[0][0].report_id)}" />
+  </py:if>
+  <div class="clear"></div>
+</div>
+
+<input type="hidden" id="dataset_id" name="dataset_id" value="${c.pkg.id}" />
+
+</form>

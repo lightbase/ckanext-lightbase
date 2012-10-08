@@ -1,0 +1,35 @@
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  py:strip=""
+  >
+
+  <py:match path="minornavigation">
+    <py:if test="c.pkg">
+    <ul class="tabbed">
+      <li py:attrs="{'class':'current-tab'} if c.action=='read' else {}">${h.subnav_link(c, h.icon('package') + _('View'), controller='ckanext.lightbase.controllers:lightbasePackageController', action='read', id=c.pkg.name)}</li>
+      <span class="divider">&nbsp;&nbsp;|&nbsp;&nbsp;</span>
+      <li py:attrs="{'class':'current-tab'} if c.action=='authz' else {}" py:if="h.check_access('package_edit_permissions',{'id':c.pkg.id})">
+        ${h.subnav_link(c, h.icon('lock') + _('Authorization'), controller='package', action='authz', id=c.pkg.name)}
+      </li>
+      <py:if test="h.check_access('package_update',{'id':c.pkg.id})">
+      	<li py:attrs="{'class':'current-tab'} if c.action=='history' else {}">${h.subnav_link(c, h.icon('page_stack') + _('History'), controller='package', action='history', id=c.pkg.name)}</li>
+        <li py:attrs="{'class':'current-tab'} if c.action=='edit' else {}">
+          ${h.subnav_link(c, h.icon('package_edit') + _('Edit'), controller='package', action='edit', id=c.pkg.name)}
+        </li>
+        <li py:attrs="{'class':'current-tab'} if c.action=='report_list' else {}">
+          ${h.subnav_link(c, h.icon('page_stack') + _('Relatórios'), controller='ckanext.lightbase.controllers.reports:lightbaseReportsController', action='report_list', id=c.pkg.name)}
+        </li>
+		<py:if test="c.action == 'resource_read'">
+          ${h.subnav_link(c, h.icon('delete') + _('Remover recurso'), controller='ckanext.lightbase.controllers:lightbasePackageController', action='resource_delete', id=c.pkg.name, resource_id=c.resource.name)}
+		</py:if>
+      </py:if>
+    </ul>
+    </py:if>
+  </py:match>
+  
+  <xi:include href="../layout.html" />
+
+</html>
+

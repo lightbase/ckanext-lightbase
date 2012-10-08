@@ -1,0 +1,105 @@
+<html xmlns:py="http://genshi.edgewall.org/"
+  xmlns:i18n="http://genshi.edgewall.org/i18n"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:foaf="http://xmlns.com/foaf/0.1/"
+  xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:dc="http://purl.org/dc/terms/"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:dcat="http://www.w3.org/ns/dcat#"
+  typeof="dcat:Dataset"
+  about=""
+  py:strip="">
+
+
+  <py:def function="optional_head">
+    <!-- data preview -->
+    <link rel="stylesheet" href="${h.url_for('/scripts/vendor/recline/css/data-explorer.css')}" />
+    <link rel="stylesheet" href="${h.url_for('/scripts/vendor/recline/css/graph-flot.css')}" />
+    <!-- /data preview -->
+    <script type="text/javascript">
+      var preload_resource = ${c.resource_json};
+    </script>
+  </py:def>
+
+  <py:def function="page_title">
+    ${h.dataset_display_name(c.package)} /
+    ${h.resource_display_name(c.resource)} - Dataset - Resource
+  </py:def>
+
+
+  <py:def function="page_heading"><!--${h.dataset_display_name(c.package)}/-->
+   ${_(identifier.get('i18n'))} ${c.resource.get('elastic_search').get(identifier.get('name')).lstrip('0')}
+  </py:def>
+
+
+  <div py:match="content">
+    <div class="notes" property="rdfs:label">
+	    <h2>Ementa</h2>
+      ${c.resource.get('description') or '(No description)'}
+    </div>
+
+    <br/>
+    
+    <div class="resource-information">
+      <h3>Additional Information</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <py:for each="field in report_dict.keys()">
+            <tr>
+          	  <td class="dataset-label" property="rdfs:label">${_(report_dict[field].get('i18n'))}</td>
+              <td class="dataset-details" property="rdf:value">${c.resource['elastic_search'].get(field)}</td>
+            </tr>
+          </py:for>
+        </tbody>
+      </table>
+      <br/>
+
+
+    <div class="resource-actions span-8">
+      <a class="pretty-button primary resource-url-analytics" href="${c.resource['elastic_search'].get('url')}">
+        <py:choose test="c.resource.get('resource_type')">
+          <py:when test="'listing'">View</py:when>
+          <py:when test="'service'">View</py:when>
+          <py:when test="'api'">API Endpoint</py:when>
+          <py:otherwise><img style="margin: 4px 8px 0 0;" src="${h.icon_url('arrow-down-16')}"/><span style="position: relative; bottom: 3px;">Baixar arquivo original</span></py:otherwise>
+        </py:choose>
+      </a>
+    </div>
+
+
+      <h3>Conteúdo</h3>
+	  <br/>
+	  ${h.literal(c.resource.get('conteudo'))}
+ 
+    <div class="resource-actions span-8" align="left">
+      <a class="pretty-button primary resource-url-analytics" href="${c.resource['elastic_search'].get('url')}">
+        <py:choose test="c.resource.get('resource_type')">
+          <py:when test="'listing'">View</py:when>
+          <py:when test="'service'">View</py:when>
+          <py:when test="'api'">API Endpoint</py:when>
+          <py:otherwise><img style="margin: 4px 8px 0 0;" src="${h.icon_url('arrow-down-16')}"/><span style="position: relative; bottom: 3px;">Baixar arquivo original</span></py:otherwise>
+        </py:choose>
+      </a>
+    </div>
+	<a href="#top">Voltar ao topo</a>
+   
+  </div>
+  </div>
+	
+  <py:def function="optional_footer">
+    <!-- data preview -->
+    <script type="text/javascript" src="${h.url_for('/scripts/vendor/jquery.mustache/jquery.mustache.js')}"></script>
+    <script type="text/javascript" src="${h.url_for('/scripts/vendor/flot/0.7/jquery.flot.js')}"></script>
+    <script src="${h.url_for('/scripts/vendor/recline/recline.js')}"></script>
+  </py:def>
+
+  <xi:include href="layout.html" />
+</html>
+

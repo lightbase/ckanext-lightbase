@@ -1,0 +1,65 @@
+<html xmlns:py="http://genshi.edgewall.org/"
+  xmlns:i18n="http://genshi.edgewall.org/i18n"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:foaf="http://xmlns.com/foaf/0.1/"
+  xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:dc="http://purl.org/dc/terms/"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:dcat="http://www.w3.org/ns/dcat#"
+  typeof="dcat:Dataset"
+  about=""
+  py:strip="">
+
+  <py:def function="page_title">${c.pkg_dict.get('title', c.pkg_dict['name'])}
+  - Datasets</py:def>
+  
+  <py:def function="page_heading" property="dc:title">
+    ${c.pkg_dict['title']}
+  </py:def>
+  
+  <py:match path="primarysidebar">
+
+  </py:match>
+
+  <div py:match="content">
+
+<div class="error-explanation">
+ <h2>Atenção! Deseja remover?</h2>
+ <p>Tem certeza que deseja remover o relatório? Essa operação não poderá ser desfeita.</p>
+</div>
+
+
+   <h3>Informações do relatório</h3>
+   <ul>
+	<li>ID: ${report[0][0].report_id}</li>
+	<li>Campos:
+	 <ul>
+		 <li>Descrição: ${report[0][0].fields_list.pop('description')}</li>
+		 <li>Conteúdo: ${report[0][0].fields_list.pop('content')}</li>
+	   <li py:for="key in report[0][0].fields_list.keys()">${report[0][0].fields_list.get(key).get('i18n')} : ${key}</li>
+	 </ul>
+	</li>
+	<li>Ação: ${report[0][1]}</li>
+   </ul>
+
+    <h3 py:if="c.error" class="form-errors">
+      Error: ${c.error}
+    </h3>
+    ${h.literal(c.form)}
+  </div>
+
+  <py:def function="optional_head">
+    <py:if test="config.get('rdf_packages')">
+      <link rel="alternate" type="application/rdf+xml" title="RDF/XML" href="${config['rdf_packages'] + '/' + c.pkg.id + '.rdf' }" />
+      <link rel="alternate" type="application/turtle" title="RDF/Turtle" href="${config['rdf_packages'] + '/' + c.pkg.id + '.ttl' }" />
+    </py:if>
+  </py:def>
+
+  <py:def function="optional_feed">
+  <link rel="alternate" type="application/atom+xml" title="Dataset History"
+    href="${url(controller='package', action='history', id=c.pkg.name, format='atom', days=7)}" />
+  </py:def>
+
+  <xi:include href="../layout.html" />
+</html>

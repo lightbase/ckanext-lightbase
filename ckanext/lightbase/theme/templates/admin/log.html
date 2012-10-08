@@ -1,0 +1,60 @@
+<html xmlns:py="http://genshi.edgewall.org/"
+  xmlns:i18n="http://genshi.edgewall.org/i18n"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  py:strip="">
+  
+  <py:def function="page_title">Log</py:def>
+  
+  <div py:match="content">
+   <h2>Log de erros</h2>
+   <div><form>
+    <h4>Filtrar por:</h4>
+    <h4>Postagem</h4>
+    <select style="width:120px;" name="data" id="data">
+      <option value=""></option>
+      <option value="24">Último dia</option>
+      <option value="168">Última semana</option>
+      <option value="720">Último mês</option>
+     </select><br/>
+    <script type="text/javascript">
+     document.getElementById('data').value = "$valor5";
+    </script>
+    <h4>Entre as datas:</h4>
+    Data inicial:  <input type="text" style="width:100px;" value="${valor3}" name="data_inicio"/><br/>
+    Data final:  <input type="text" style="width:109px;" value="${valor4}" name="data_final"/><br/>Formato: AAAA-MM-DD<br/><br/>
+    <h4>Tipo de erro</h4>
+    <select style="width:120px;" name="tipo" id="tipo">
+      <option value=""></option>
+	<py:for each="j in valor2">
+      <option value="${j}">${j}</option>
+	</py:for>
+     </select>
+    <script type="text/javascript">
+     document.getElementById('tipo').value = "$valor6";
+    </script>
+    <br/><input type="submit" value="Filtrar"/><br/><br/>
+    <input TYPE="BUTTON" VALUE="Retirar filtro" ONCLICK="window.location.href='/ckan-admin/log'"/>
+    </form><br/>
+	</div> 
+    ${c.page.pager()}
+	<table>
+	 <tr>
+	  <th>Data</th>
+	  <th>Mensagem de erro</th>
+	  <th>Tipo de erro</th>
+	  <th>Download do arquivo</th>
+	 </tr>
+	<py:for each="f in valor">
+	<tr>
+	<td>${f.creation_date}</td>
+	<td>${f.errmsg}</td>
+	<td>${f.error_type}</td>
+	<td><a href="/ckan-admin/log?arquivo=${f.hash}">${f.original_file}</a></td>
+	</tr>
+	</py:for>
+	 </table>
+    ${c.page.pager()}
+  </div>
+
+  <xi:include href="layout.html" />
+</html>

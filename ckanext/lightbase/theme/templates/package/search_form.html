@@ -1,0 +1,26 @@
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  py:strip=""
+  >
+
+	  <div class="front-page">
+      <div class="span-8 action-box">
+        <div class="action-box-inner find">
+          <h1>Buscar Atos da PGFN</h1>
+
+<form id="dataset-search" action="${h.url_for(controller='package', action='search')}" method="GET">
+  <input type="search" class="search" name="q" value="${c.q}" autocomplete="off" results="0" placeholder="${_('Search')}..." />
+  <py:for each="(k, v) in c.fields"> 
+    <input type="hidden" name="${k}" value="${v}" />  
+  </py:for>
+</form>
+
+
+        </div>
+	   </div>
+
+	  </div>
+
+</html>

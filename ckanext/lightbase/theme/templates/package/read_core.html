@@ -1,0 +1,97 @@
+<html xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  xmlns:i18n="http://genshi.edgewall.org/i18n"
+  py:strip=""
+  >
+  <xi:include href="../_util.html" />
+  <xi:include href="../facets.html" />
+
+  <div id="dataset" class="dataset">
+    <!-- Overview Section -->
+    <div id="dataset-overview">
+
+      <!-- Description -->
+      <div class="notes" py:if="str(c.pkg_notes_formatted).strip()">
+        ${c.pkg_notes_formatted}
+      </div>
+      
+	  <br/>
+
+	  <div class="front-page">
+
+      <div class="span-8 action-box">
+        <div class="action-box-inner find">
+		 <h1>${_('Search')} ${c.pkg_dict['title']}</h1>
+
+          <form id="dataset-search" method="GET">
+            <input type="search" class="search" name="q" value="${c.q}" autocomplete="off" results="0" placeholder="${_('Search')}..." />
+            <py:for each="(k, v) in c.fields">
+              <input type="hidden" name="${k}" value="${v}" />
+            </py:for>
+          </form>
+      	  ${field_list()}
+        </div>
+	   </div>
+
+	  </div>
+
+      <!-- Resources -->
+      <div id="dataset-resources" class="resources subsection">
+	    <py:choose test="">
+          <py:when test="c.query_error">
+            <p class="search-error"><strong>Houve um erro na sua busca.</strong> 
+		    Verifique se os parâmetros fornecidos estão de acordo com o <a href="/help" title="Manual da busca" target="_blank">manual da busca.</a></p>
+		    <p><a href="/help" title="Manual da busca" target="_blank">Acesse aqui o manual da busca para tirar suas dúvidas.</a></p>
+		  </py:when>
+          <py:otherwise>
+	        <h4 i18n:msg="item_count"><strong>${c.pkg_dict.get('elastic_hits')}</strong> documentos encontrados</h4>
+            <py:if test="not len(c.pkg_dict.get('elastic_resources', []))">
+              (none)
+            </py:if>
+		  </py:otherwise>
+		</py:choose>
+        <!-- Elastic search fields for resources in this dataset -->
+        <ul class="pagination">
+		 ${c.page.pager(q=c.q)}
+        </ul>
+        <py:for each="res in c.pkg_dict.get('elastic_resources', [])">
+          <div class="search-result">
+           <h4><a class="main-link" href="/dataset/${c.pkg_dict.get('name')}/resource/${res['chave']}">
+             ${identifier.get('i18n')} ${res.get(identifier.get('name')).lstrip('0')}
+           </a></h4>
+          	<table>
+          	  <py:for each="field in report_dict.keys()">
+              <tr id="${field}">
+          	  	  <td class="dataset-label" property="rdfs:label">${field}</td>
+        	      <td class="dataset-details" property="rdf:value">${res[field]}</td>
+        	    </tr>
+          	  </py:for>
+			  <py:choose test="'arquivo' in res">
+			  	<py:when test="True">
+          	  	  <tr>
+          	    	<td class="dataset-label" property="rdfs:label">Baixar arquivo</td>
+					<td class="dataset-details" property="rdf:value"><a href="${res['url']}" title="Baixar arquivo" target="_blank">${res['url']}</a></td>
+          	  	  </tr>
+				</py:when>
+				<py:otherwise>
+          	  	  <tr>
+          	    	<td class="dataset-label" property="rdfs:label">Baixar arquivo</td>
+          	    	<td class="dataset-details" property="rdf:value">Arquivo indisponível</td>
+          	  	  </tr>
+				</py:otherwise>
+			  </py:choose>
+        	</table>
+          </div>
+        </py:for>
+        <ul class="pagination">
+		 ${c.page.pager(q=c.q)}
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Dataset Information Section -->
+
+  </div> <!-- /dataset -->
+
+</html>

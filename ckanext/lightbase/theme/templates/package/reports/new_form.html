@@ -1,0 +1,131 @@
+<form id="dataset-edit" method="post" 
+  py:attrs="{'class':'has-errors'} if errors else {}"
+  xmlns:i18n="http://genshi.edgewall.org/i18n"
+  xmlns:py="http://genshi.edgewall.org/"
+  xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<div class="error-explanation" py:if="error_summary">
+<h2>Errors in form</h2>
+<p>The form contains invalid entries:</p>
+<ul>
+ <li py:for="key, error in error_summary.items()">
+  ${"%s: %s" % (key, error)}
+ </li>
+</ul>
+</div>
+
+
+	<fieldset id="basic-information">
+	 <dl>
+
+	  <dt class="name-label">
+	    <label class="field_req" for="name">${_('Ações')}</label>
+	  </dt>
+
+
+	  <dd class="name-field">
+	    <span class="js-url-text url-text">
+	     <span class="js-url-viewmode js-url-suffix"> &nbsp;</span>
+	     <a href="#" style="display: none;" class="url-edit js-url-editlink js-url-viewmode">(edit)</a>
+	    </span>
+        <select id="action" name="action">
+          <option id="${action.dataset_action_id}" value="${action.dataset_action_id}" py:for="action in report_actions">
+            ${action.action_name}
+          </option>
+        </select>
+	   </dd>
+
+	  <dt class="name-label">
+	    <label class="field_req" for="name">${_('Campos')}</label>
+	  </dt>
+
+
+	  <dd class="name-field" py:for="chave in keys">
+	    <span class="js-url-text url-text">
+	     <span class="js-url-viewmode js-url-suffix"> &nbsp;</span>
+	     <a href="#" style="display: none;" class="url-edit js-url-editlink js-url-viewmode">(edit)</a>
+	    </span>
+        <input id="${chave}" name="field" type="checkbox" value="${chave}"/>
+        ${keys.get(chave).get('i18n')}
+	   </dd>
+
+	  <dt class="name-label">
+	    <label class="field_req" for="name">${_('Descrição')}</label>
+	  </dt>
+
+
+	  <dd class="name-field">
+	    <span class="js-url-text url-text">
+	     <span class="js-url-viewmode js-url-suffix"> &nbsp;</span>
+	     <a href="#" style="display: none;" class="url-edit js-url-editlink js-url-viewmode">(edit)</a>
+	    </span>
+        <select name="description" id="description">
+          <option id="${chave}" value="${chave}"  py:for="chave in keys">
+            ${keys.get(chave).get('i18n')}
+          </option>
+        </select>
+	   </dd>
+
+	  <dt class="name-label">
+	    <label class="field_req" for="name">${_('Conteúdo')}</label>
+	  </dt>
+
+
+	  <dd class="name-field">
+	    <span class="js-url-text url-text">
+	     <span class="js-url-viewmode js-url-suffix"> &nbsp;</span>
+	     <a href="#" style="display: none;" class="url-edit js-url-editlink js-url-viewmode">(edit)</a>
+	    </span>
+        <select name="content" id="content">
+          <option id="${chave}" value="${chave}"  py:for="chave in keys">
+            ${keys.get(chave).get('i18n')}
+          </option>
+        </select>
+	   </dd>
+
+	  <dt class="name-label">
+	    <label class="field_req" for="name">${_('Identificador')}</label>
+	  </dt>
+
+	  <dd class="name-field">
+	    <span class="js-url-text url-text">
+	     <span class="js-url-viewmode js-url-suffix"> &nbsp;</span>
+	     <a href="#" style="display: none;" class="url-edit js-url-editlink js-url-viewmode">(edit)</a>
+	    </span>
+        <input type="text" name="identifier_i18n" />
+        <select name="identifier" id="identifier">
+          <option id="${chave}" value="${chave}"  py:for="chave in keys">
+            ${keys.get(chave).get('i18n')}
+          </option>
+        </select>
+	   </dd>
+
+
+	  <dt class="name-label">
+	    <label class="field_req" for="name">${_('Apresentação')}</label>
+	  </dt>
+
+	  <dd class="name-field">
+	   <span class="js-url-text url-text">
+	    <span class="js-url-viewmode js-url-suffix"> &nbsp;</span>
+	    <a href="#" style="display: none;" class="url-edit js-url-editlink js-url-viewmode">(edit)</a>
+	   </span>
+	   <input id="display" name="dislay" type="textarea" class="url-input js-url-editmode js-url-input" />
+	   <p class="js-url-is-valid">&nbsp;</p>
+	  </dd>
+
+	 </dl>
+
+	</fieldset>
+
+<div class="form-submit">
+  <input id="save" class="pretty-button primary" name="save" type="submit" value="${_('Save Changes')}" />
+  <py:if test="c.pkg">
+    <input id="cancel" class="pretty-button href-action" name="cancel" type="reset" value="${_('Cancel')}" action="${h.url_for(controller='package', action='read', id=c.pkg.name)}" />
+  </py:if>
+  <div class="clear"></div>
+</div>
+
+<input type="hidden" id="dataset_id" name="dataset_id" value="${c.pkg.id}" />
+
+</form>
